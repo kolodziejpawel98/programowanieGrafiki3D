@@ -41,8 +41,6 @@ void SimpleShapeApplication::init()
     std::vector<GLushort> indices = {
         0, 1, 6, 1, 3, 6, 5, 2, 4
     };
-
-    std::cout<<"\n\nsizeof glushport = "<<sizeof(GLushort)<<std::endl;
     
     GLuint i_buffer_handle;
     glGenBuffers(1, &i_buffer_handle);
@@ -50,6 +48,18 @@ void SimpleShapeApplication::init()
     OGL_CALL(glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, i_buffer_handle));
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.size()*sizeof(GLushort), indices.data(), GL_STATIC_DRAW);
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+
+
+    GLuint u_buffer_handle;
+    glGenBuffers(1, &u_buffer_handle);
+    glBindBuffer(GL_UNIFORM_BUFFER, u_buffer_handle);
+    glBufferData(GL_UNIFORM_BUFFER, 8 * sizeof(float), nullptr, GL_STATIC_DRAW);
+    glBindBuffer(GL_UNIFORM_BUFFER, 0);
+    glBindBufferBase(GL_UNIFORM_BUFFER, 0, u_buffer_handle);
+    float strength = 0.3;
+    float color[3] = {0.98, 0.003, 1.7}; //bez vertexColor.rgb w base_fs wychodzi Indigo
+    glBufferSubData(GL_UNIFORM_BUFFER, 0, sizeof(float), &strength);
+    glBufferSubData(GL_UNIFORM_BUFFER, 4 * sizeof(float), 3 * sizeof(float), color);
 
 
     // This setups a Vertex Array Object (VAO) that  encapsulates
