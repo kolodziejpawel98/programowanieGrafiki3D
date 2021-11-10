@@ -60,12 +60,13 @@ void SimpleShapeApplication::init()
     glGenBuffers(1, &color_trans_buffer_handle);
     glBindBuffer(GL_UNIFORM_BUFFER, color_trans_buffer_handle);
     glBufferData(GL_UNIFORM_BUFFER, 8 * sizeof(float), nullptr, GL_STATIC_DRAW);
+    glBindBuffer(GL_UNIFORM_BUFFER, 0); //?????????????????????
     glBindBufferBase(GL_UNIFORM_BUFFER, 0, color_trans_buffer_handle); //????????????????????
     float strength = 0.9;
     float color[3] = {0.98, 0.003, 1.7}; //bez vertexColor.rgb w base_fs wychodzi Indigo
     glBufferSubData(GL_UNIFORM_BUFFER, 0, sizeof(float), &strength);
     glBufferSubData(GL_UNIFORM_BUFFER, 4 * sizeof(float), 3 * sizeof(float), color);
-    glBindBuffer(GL_UNIFORM_BUFFER, 0); //?????????????????????
+    
 
 
 
@@ -73,6 +74,8 @@ void SimpleShapeApplication::init()
     glGenBuffers(1, &model_trans_buffer_handle);
     glBindBuffer(GL_UNIFORM_BUFFER, model_trans_buffer_handle);
     glBufferData(GL_UNIFORM_BUFFER, 12 * sizeof(float), nullptr, GL_STATIC_DRAW);
+    glBindBuffer(GL_UNIFORM_BUFFER, 0);//???????????????????????????????
+    glBindBufferBase(GL_UNIFORM_BUFFER, 1, model_trans_buffer_handle); //????????????????????????????
     float theta = 1.0*glm::pi<float>()/6.0f;
     auto cs = std::cos(theta);
     auto ss = std::sin(theta);  
@@ -85,8 +88,6 @@ void SimpleShapeApplication::init()
     glBufferSubData(GL_UNIFORM_BUFFER, 4*sizeof(float), 4*sizeof(float), &rot[0]);
     glBufferSubData(GL_UNIFORM_BUFFER, 8*sizeof(float), 4*sizeof(float), &rot[1]);
     
-    glBindBuffer(GL_UNIFORM_BUFFER, 0);//???????????????????????????????
-    glBindBufferBase(GL_UNIFORM_BUFFER, 1, model_trans_buffer_handle); //????????????????????????????
 
     // This setups a Vertex Array Object (VAO) that  encapsulates
     // the state of all vertex buffers needed for rendering
