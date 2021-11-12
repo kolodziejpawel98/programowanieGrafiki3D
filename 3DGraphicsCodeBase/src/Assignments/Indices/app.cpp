@@ -42,8 +42,6 @@ void SimpleShapeApplication::init()
     std::vector<GLushort> indices = {
         0, 1, 6, 1, 3, 6, 5, 2, 4
     };
-
-    std::cout<<"\n\nsizeof GLfloat = "<<sizeof(GLfloat)<<std::endl;
     
     GLuint i_buffer_handle;
     glGenBuffers(1, &i_buffer_handle);
