@@ -9,6 +9,10 @@
 #include <tuple>
 
 #include "Application/utils.h"
+#include "glm/glm.hpp"
+#include "glm/gtc/constants.hpp"
+#include "glm/gtx/string_cast.hpp"
+#include "glm/gtc/matrix_transform.hpp"
 
 void SimpleShapeApplication::init()
 {
@@ -22,7 +26,6 @@ void SimpleShapeApplication::init()
         exit(-1);
     }
 
-    // A vector containing the x,y,z vertex coordinates for the triangle.
     std::vector<GLfloat> vertices = {
         -0.5f, -0.5f, 0.0f, 0.0f, 1.0f, 0.0f,//0
         0.5f, -0.5f, 0.0f,  0.0f, 1.0f, 0.0f,//1
@@ -33,6 +36,15 @@ void SimpleShapeApplication::init()
         -0.5f, 0.0f, 0.0f,  0.0f, 1.0f, 0.0f,//6
     };
 
+    //  std::vector<GLfloat> vertices = {
+    //     0.0f, -0.5f, -0.5f, 0.0f, 1.0f, 0.0f,//0
+    //     0.5f, 0.0f, 0.0f,  0.0f, 1.0f, 0.0f,//1
+    //     0.0f, -0.5f, 0.5f,   1.0f, 0.0f, 0.0f,//2
+    //     -0.5f, 0.0f, 0.0f,   0.0f, 1.0f, 0.0f,//3
+    // };
+
+    // glEnable(GL_DEPTH_TEST);
+
     GLuint v_buffer_handle;
     glGenBuffers(1, &v_buffer_handle);
     OGL_CALL(glBindBuffer(GL_ARRAY_BUFFER, v_buffer_handle));
@@ -42,8 +54,9 @@ void SimpleShapeApplication::init()
     std::vector<GLushort> indices = {
         0, 1, 6, 1, 3, 6, 5, 2, 4
     };
-
-    std::cout<<"\n\nsizeof GLfloat = "<<sizeof(GLfloat)<<std::endl;
+    // std::vector<GLushort> indices = {
+    //     0, 1, 2
+    // };
     
     GLuint i_buffer_handle;
     glGenBuffers(1, &i_buffer_handle);
@@ -52,6 +65,31 @@ void SimpleShapeApplication::init()
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.size()*sizeof(GLushort), indices.data(), GL_STATIC_DRAW);
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 
+
+    GLuint color_trans_buffer_handle;
+    glGenBuffers(1, &color_trans_buffer_handle);
+    glBindBuffer(GL_UNIFORM_BUFFER, color_trans_buffer_handle);
+    glBufferData(GL_UNIFORM_BUFFER, 8 * sizeof(float), nullptr, GL_STATIC_DRAW);
+    glBindBuffer(GL_UNIFORM_BUFFER, 0); 
+    glBindBufferBase(GL_UNIFORM_BUFFER, 0, color_trans_buffer_handle); 
+    float strength = 0.9;
+    float color[3] = {0.98, 0.003, 1.7};
+    glBufferSubData(GL_UNIFORM_BUFFER, 0, sizeof(float), &strength);
+    glBufferSubData(GL_UNIFORM_BUFFER, 4 * sizeof(float), 3 * sizeof(float), color);
+    
+
+    auto [w, h] = frame_buffer_size();
+    GLuint pvm_buffer_handle;
+    glGenBuffers(1, &pvm_buffer_handle);
+    glBindBuffer(GL_UNIFORM_BUFFER, pvm_buffer_handle);
+    glBufferData(GL_UNIFORM_BUFFER, sizeof(glm::mat4), nullptr, GL_STATIC_DRAW);
+    glm::mat4 Projection = glm::perspective(glm::half_pi<float>(), (float)w/h, 0.1f, 100.0f);
+    glm::mat4 View = glm::lookAt(glm::vec3{1.0, .5, 2.0}, glm::vec3{0.0f, 0.0f, 0.0f}, glm::vec3{0.0, 0.0, 1.0});
+    glm::mat4 Model = glm::mat4(1.0f);
+    glm::mat4 PVM = Projection * View * Model;
+    glBufferSubData(GL_UNIFORM_BUFFER, 0, sizeof(glm::mat4), &PVM[0]);
+    glBindBuffer(GL_UNIFORM_BUFFER, 0);
+    glBindBufferBase(GL_UNIFORM_BUFFER, 1, pvm_buffer_handle);
 
     // This setups a Vertex Array Object (VAO) that  encapsulates
     // the state of all vertex buffers needed for rendering
@@ -76,7 +114,7 @@ void SimpleShapeApplication::init()
     glClearColor(0.81f, 0.81f, 0.8f, 1.0f);
 
     // This setups an OpenGL vieport of the size of the whole rendering window.
-    auto [w, h] = frame_buffer_size();
+    
     glViewport(0, 0, w, h);
 
     glUseProgram(program);
