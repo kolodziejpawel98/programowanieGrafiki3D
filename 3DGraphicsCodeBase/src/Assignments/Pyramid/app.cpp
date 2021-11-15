@@ -25,44 +25,35 @@ void SimpleShapeApplication::init()
         std::cerr << "Invalid program" << std::endl;
         exit(-1);
     }
-
-    // std::vector<GLfloat> vertices = {
-    //     -0.5f, -0.5f, 0.0f, 0.0f, 1.0f, 0.0f,//0
-    //     0.5f, -0.5f, 0.0f,  0.0f, 1.0f, 0.0f,//1
-    //     0.5f, 0.0f, 0.0f,   1.0f, 0.0f, 0.0f,//2
-    //     0.5f, 0.0f, 0.0f,   0.0f, 1.0f, 0.0f,//3
-    //     0.0f, 0.5f, 0.0f,   1.0f, 0.0f, 0.0f,//4
-    //     -0.5f, 0.0f, 0.0f,  1.0f, 0.0f, 0.0f,//5
-    //     -0.5f, 0.0f, 0.0f,  0.0f, 1.0f, 0.0f,//6
-    // };
+    
     glEnable(GL_DEPTH_TEST);
-    // glEnable(GL_CULL_FACE);
+    glEnable(GL_CULL_FACE);
     
     std::vector<GLfloat> vertices = {
         //tylna sciana
-        -0.5f, -0.5f, -0.5f, 1.0f, 0.0f, 0.0f,//0
+        0.0f, 1.0f, 0.0f,   1.0f, 0.0f, 0.0f,//0
         0.5f, -0.5f, -0.5f,  1.0f, 0.0f, 0.0f,//1
-        0.0f, 0.5f, 0.5f,   1.0f, 0.0f, 0.0f,//2
+        -0.5f, -0.5f, -0.5f, 1.0f, 0.0f, 0.0f,//2
         //prawa sciana
-        0.0f, 0.5f, 0.5f,   0.0f, 1.0f, 0.0f,//3
-        0.5f, -0.5f, -0.5f,  0.0f, 1.0f, 0.0f,//4
-        0.5f, -0.5f, 0.5f,  0.0f, 1.0f, 0.0f,//5
+        0.0f, 1.0f, 0.0f,   0.0f, 1.0f, 0.0f,//3
+        0.5f, -0.5f, 0.5f,  0.0f, 1.0f, 0.0f,//4
+        0.5f, -0.5f, -0.5f,  0.0f, 1.0f, 0.0f,//5
         //lewa sciana
-        0.0f, 0.5f, 0.5f,   0.0f, 0.0f, 1.0f,//6
+        0.0f, 1.0f, 0.0f,   0.0f, 0.0f, 1.0f,//6
         -0.5f, -0.5f, -0.5f,  0.0f, 0.0f, 1.0f,//7
         -0.5f, -0.5f, 0.5f,  0.0f, 0.0f, 1.0f,//8
         //przednia sciana
-        0.0f, 0.5f, 0.5f,   0.0f, 0.0f, 0.0f,//9
-        -0.5f, -0.5f, 0.5f,  0.0f, 0.0f, 0.0f,//10
-        0.5f, -0.5f, 0.5f,  0.0f, 0.0f, 0.0f,//11
-        //podstawa 13:00 - 19:00 
+        0.0f, 1.0f, 0.0f,   0.0f, 0.0f, 0.0f,//9
+        -0.5f, -0.5f, 0.5f,  0.0f, 0.0f, 0.0f,//11
+        0.5f, -0.5f, 0.5f,  0.0f, 0.0f, 0.0f,//10
+        //podstawa 
         0.5f, -0.5f, -0.5f,   1.0f, 1.0f, 0.2f,//12
         0.5f, -0.5f, 0.5f,  1.0f, 1.0f, 0.2f,//13
         -0.5f, -0.5f, 0.5f, 1.0f, 1.0f, 0.2f,//14
-        //podstawa 19:00 - 13:00
-        -0.5f, -0.5f, 0.5f,   1.0f, 1.0f, 0.2f,//15
-        -0.5f, -0.5f, -0.5f,  1.0f, 1.0f, 0.2f,//16
-        0.5f, -0.5f, -0.5f,  1.0f, 1.0f, 0.2f,//17
+        //podstawa
+        0.5f, -0.5f, -0.5f,  1.0f, 1.0f, 0.2f,//15
+        -0.5f, -0.5f, 0.5f,   1.0f, 1.0f, 0.2f,//16
+        -0.5f, -0.5f, -0.5f,  1.0f, 1.0f, 0.2f,//17
     };
 
     GLuint v_buffer_handle;
@@ -82,31 +73,27 @@ void SimpleShapeApplication::init()
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.size()*sizeof(GLushort), indices.data(), GL_STATIC_DRAW);
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 
-
     GLuint color_trans_buffer_handle;
     glGenBuffers(1, &color_trans_buffer_handle);
     glBindBuffer(GL_UNIFORM_BUFFER, color_trans_buffer_handle);
     glBufferData(GL_UNIFORM_BUFFER, 8 * sizeof(float), nullptr, GL_STATIC_DRAW);
     glBindBuffer(GL_UNIFORM_BUFFER, 0); 
     glBindBufferBase(GL_UNIFORM_BUFFER, 0, color_trans_buffer_handle); 
-    // float strength = 0.9;
-    // float color[3] = {0.98, 0.003, 1.7}; //<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<,
     float strength = 1.0;
     float color[3] = {1.0, 1.0, 1.0};
     glBufferSubData(GL_UNIFORM_BUFFER, 0, sizeof(float), &strength);
     glBufferSubData(GL_UNIFORM_BUFFER, 4 * sizeof(float), 3 * sizeof(float), color);
     
-
     auto [w, h] = frame_buffer_size();
     GLuint pvm_buffer_handle;
     glGenBuffers(1, &pvm_buffer_handle);
     glBindBuffer(GL_UNIFORM_BUFFER, pvm_buffer_handle);
     glBufferData(GL_UNIFORM_BUFFER, sizeof(glm::mat4), nullptr, GL_STATIC_DRAW);
-    // glm::mat4 Projection = glm::perspective(glm::half_pi<float>(), (float)w/h, 0.1f, 100.0f);
-    // glm::mat4 View = glm::lookAt(glm::vec3{1.0, .5, 2.0}, glm::vec3{0.0f, 0.0f, 0.0f}, glm::vec3{0.0, 0.0, 1.0});
     glm::mat4 Model = glm::mat4(1.0f);
     glm::mat4 Projection = glm::perspective(glm::half_pi<float>(), (float)w/h, 0.1f, 100.0f);
-    glm::mat4 View = glm::lookAt(glm::vec3{1.8f, -1.4f, 1.8f}, glm::vec3{0.0f, 0.0f, 0.0f}, glm::vec3{0.0, 1.0, 0.0});
+    glm::mat4 View = glm::lookAt(glm::vec3{1.8f, -1.4f, 1.8f}, glm::vec3{0.0f, 0.0f, 0.0f}, glm::vec3{0.0, 1.0, 0.0}); //widok z dolu pod skosem
+    // glm::mat4 View = glm::lookAt(glm::vec3{0.0f, 2.0f, 0.1f}, glm::vec3{0.0f, -2.0f, 0.0f}, glm::vec3{0.0, 1.0, 0.0}); //widok z gory
+    // glm::mat4 View = glm::lookAt(glm::vec3{0.0f, -2.0f, 0.1f}, glm::vec3{0.0f, 2.0f, 0.0f}, glm::vec3{0.0, 1.0, 0.0}); //widok z dolu
     glm::mat4 PVM = Projection * View * Model;
     glBufferSubData(GL_UNIFORM_BUFFER, 0, sizeof(glm::mat4), &PVM[0]);
     glBindBuffer(GL_UNIFORM_BUFFER, 0);
@@ -135,7 +122,6 @@ void SimpleShapeApplication::init()
     glClearColor(0.81f, 0.81f, 0.8f, 1.0f);
 
     // This setups an OpenGL vieport of the size of the whole rendering window.
-    
     glViewport(0, 0, w, h);
 
     glUseProgram(program);
@@ -146,7 +132,6 @@ void SimpleShapeApplication::frame()
 {
     // Binding the VAO will setup all the required vertex buffers.
     glBindVertexArray(vao_);
-    // glDrawArrays(GL_TRIANGLES, 0, 9);
     glDrawElements(GL_TRIANGLES, 18, GL_UNSIGNED_SHORT, reinterpret_cast<GLvoid*>(0));
     glBindVertexArray(0);
 }
