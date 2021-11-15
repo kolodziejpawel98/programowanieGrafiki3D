@@ -52,35 +52,27 @@ void SimpleShapeApplication::init()
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.size()*sizeof(GLushort), indices.data(), GL_STATIC_DRAW);
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 
-
-
-
-
     GLuint color_trans_buffer_handle;
     glGenBuffers(1, &color_trans_buffer_handle);
     glBindBuffer(GL_UNIFORM_BUFFER, color_trans_buffer_handle);
     glBufferData(GL_UNIFORM_BUFFER, 8 * sizeof(float), nullptr, GL_STATIC_DRAW);
-    glBindBuffer(GL_UNIFORM_BUFFER, 0); //?????????????????????
-    glBindBufferBase(GL_UNIFORM_BUFFER, 0, color_trans_buffer_handle); //????????????????????
+    glBindBuffer(GL_UNIFORM_BUFFER, 0);
+    glBindBufferBase(GL_UNIFORM_BUFFER, 0, color_trans_buffer_handle);
     float strength = 0.9;
-    float color[3] = {0.98, 0.003, 1.7}; //bez vertexColor.rgb w base_fs wychodzi Indigo
+    float color[3] = {0.98, 0.003, 1.7};
     glBufferSubData(GL_UNIFORM_BUFFER, 0, sizeof(float), &strength);
     glBufferSubData(GL_UNIFORM_BUFFER, 4 * sizeof(float), 3 * sizeof(float), color);
-    
-
-
 
     GLuint model_trans_buffer_handle;
     glGenBuffers(1, &model_trans_buffer_handle);
     glBindBuffer(GL_UNIFORM_BUFFER, model_trans_buffer_handle);
     glBufferData(GL_UNIFORM_BUFFER, 12 * sizeof(float), nullptr, GL_STATIC_DRAW);
-    glBindBuffer(GL_UNIFORM_BUFFER, 0);//???????????????????????????????
-    glBindBufferBase(GL_UNIFORM_BUFFER, 1, model_trans_buffer_handle); //????????????????????????????
+    glBindBuffer(GL_UNIFORM_BUFFER, 0);
+    glBindBufferBase(GL_UNIFORM_BUFFER, 1, model_trans_buffer_handle);
     float theta = 1.0*glm::pi<float>()/6.0f;
     auto cs = std::cos(theta);
     auto ss = std::sin(theta);  
     glm::mat2 rot{cs,ss,-ss,cs};
-    // glm::mat2 rot{0.866025, -0.500000, -0.500000, 0.866025};
     glm::vec2 trans{0.0,  -0.25};
     glm::vec2 scale{0.5, 0.5};  
     glBufferSubData(GL_UNIFORM_BUFFER, 0, sizeof(glm::vec2), &scale);
@@ -88,7 +80,6 @@ void SimpleShapeApplication::init()
     glBufferSubData(GL_UNIFORM_BUFFER, 4*sizeof(float), 4*sizeof(float), &rot[0]);
     glBufferSubData(GL_UNIFORM_BUFFER, 8*sizeof(float), 4*sizeof(float), &rot[1]);
     
-
     // This setups a Vertex Array Object (VAO) that  encapsulates
     // the state of all vertex buffers needed for rendering
     glGenVertexArrays(1, &vao_);
