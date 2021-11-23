@@ -85,20 +85,18 @@ void SimpleShapeApplication::init()
     glBufferSubData(GL_UNIFORM_BUFFER, 0, sizeof(float), &strength);
     glBufferSubData(GL_UNIFORM_BUFFER, 4 * sizeof(float), 3 * sizeof(float), color);
     
+    glGenBuffers(1, &pvm_buffer_handle);
+    glBindBufferBase(GL_UNIFORM_BUFFER, 1, pvm_buffer_handle);
+
     int w, h;
     std::tie(w, h) = frame_buffer_size();
-    float aspect_ = (float)w/h;
-    float fov_ = glm::pi<float>()/4.0;
-    float near_ = 0.1f;
-    float far_ = 100.0f;
-    camera()->set_aspect(aspect_);
-    
-    GLuint pvm_buffer_handle;
-    glGenBuffers(1, &pvm_buffer_handle);
-    // P_ = glm::perspective(fov_, aspect_, near_, far_); 
-    camera()->perspective(fov_, aspect_, near_, far_);
+    float aspect = (float)w/h;
+    float fov = glm::pi<float>()/4.0;
+    float near = 0.1f;
+    float far = 100.0f;
+    camera()->set_aspect(aspect); 
+    camera()->perspective(fov, aspect, near, far);
     camera()->look_at(glm::vec3{1.8f, -1.4f, 1.8f}, glm::vec3{0.0f, 0.0f, 0.0f}, glm::vec3{0.0, 1.0, 0.0});
-    glBindBufferBase(GL_UNIFORM_BUFFER, 1, pvm_buffer_handle);
 
     // This setups a Vertex Array Object (VAO) that  encapsulates
     // the state of all vertex buffers needed for rendering
