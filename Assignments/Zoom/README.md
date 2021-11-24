@@ -31,7 +31,7 @@ public:
     glm::mat4 view() const { return V_; }
 
     glm::mat4 projection() const { return glm::perspective(fov_, aspect_, near_, far_); }
-    
+
 private:
     float fov_;
     float aspect_;
@@ -49,12 +49,7 @@ Camera *camera_;
 i metody
 ```
 void set_camera(Camera *camera) { camera_ = camera; }
-Camera *camera() { return camera_; }
-~SimpleShapeApplication() {
-    if (camera_) {
-        delete camera_;
-    }
-}
+Camera *camera() const { return camera_; }
 ```
 
 W metodzie `init`  inicjujemy  wskaźnik do kamery:
@@ -83,7 +78,7 @@ float logistic(float y) {
 i jej odwrotność:
 ```
 float inverse_logistics(float x) {
-    return std::log(x/(1.0f-x)); 
+    return std::log(x/(1.0f-x));
 }
 ```
 
@@ -103,11 +98,11 @@ y+=y_offset
 ```
 i przekształcamy z powrotem do przedziału (0,1) za pomocą funkcji logistycznej:
 ```
-x = logistic(y); 
+x = logistic(y);
 ```
 i w kóncu do przedziału (0, pi):
 ```
-fov = x*glm::pi<float>(); 
+fov = x*glm::pi<float>();
 ```
 
 Korzystając z powyższych informacji proszę zaimplementować metodę `zoom` w klasie `Camera` która odpowiednio zmienia `fov`.
@@ -127,5 +122,3 @@ void scroll_callback(double xoffset, double yoffset) override {
      }
 ```
 w klasie `SimpleShapeApplication`. Stała przeskalowywująca `30.0f` została dobrana doświadczalnie.
-
-   
