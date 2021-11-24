@@ -70,8 +70,6 @@ FetchContent_Declare(
 FetchContent_MakeAvailable(spdlog)
 
 
-
-
 if (__VS_CODE__)
 
     # GLSLang
@@ -92,10 +90,17 @@ find_package(OpenGL REQUIRED)
 
 link_libraries(OpenGL::GL glfw glm glad)
 add_subdirectory(src/Application)
-add_subdirectory(src/ObjectReader)
+
+if (EXISTS ${SOURCE_DIR}/ObjectReader)
+    add_subdirectory(src/ObjectReader)
+else()
+    message("Warning: directory ObjectReader does not exists.")
+endif ()
 add_subdirectory(src/Engine)
-if (EXISTS src/EngineStudents)
+if (EXISTS ${SOURCE_DIR}/EngineStudents)
     add_subdirectory(src/EngineStudents)
+else()
+    message("Warning: directory EngineStudents does not exists.")
 endif ()
 
 
