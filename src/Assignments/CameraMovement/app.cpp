@@ -29,6 +29,7 @@ void SimpleShapeApplication::init()
     glEnable(GL_DEPTH_TEST);
     glEnable(GL_CULL_FACE);
     set_camera(new Camera);
+    set_controler(new CameraControler(camera()));
     
     std::vector<GLfloat> vertices = {
         //tylna sciana
