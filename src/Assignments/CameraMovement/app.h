@@ -18,7 +18,6 @@
 class SimpleShapeApplication : public xe::Application
 {
 public:
-    Camera *camera_;
     
     SimpleShapeApplication(int width, int height, std::string title, bool debug) : Application(width, height, title, debug) {}
 
@@ -71,5 +70,6 @@ public:
 private:
     GLuint vao_;
     GLuint pvm_buffer_handle;
+    Camera *camera_;
     CameraControler *controler_;
 };

@@ -62,7 +62,6 @@ public:
         y+=y_offset;
         x = logistic(y); 
         fov_ = x*glm::pi<float>();
-        // std::cout<<"fov_ = "<<fov_<<std::endl; 
     }
 
     glm::vec3 x() const { return x_; }
@@ -96,9 +95,7 @@ public:
     }  
 
     void rotate_around_point(float angle, const glm::vec3 &axis, const glm::vec3 &c) {
-        std::cout<<"rotate_around_point()"<<std::endl;
         auto R = rotation(angle, axis);
-        std::cout<<"po rotation"<<std::endl;
         x_ = R * x_;
         y_ = R * y_;
         z_ = R * z_;
@@ -112,9 +109,6 @@ public:
     void rotate_around_center(float angle, const glm::vec3 &axis) {
         rotate_around_point(angle, axis, center_); 
     }
-
-
-
 
 private:
     float fov_;

@@ -2,14 +2,11 @@
 
 class CameraControler {
 public:
-    CameraControler() : camera_(nullptr) {}
+    CameraControler() : camera_(nullptr), scale_(0.01), LMB_pressed_(false) {}
     
-    CameraControler(Camera* camera) : camera_(camera), LMB_pressed_(false) {}
+    CameraControler(Camera* camera) : camera_(camera), scale_(0.01), LMB_pressed_(false) {}
     
-    void set_camera(Camera *camera) { 
-        camera_ = camera; 
-        LMB_pressed_ = false;
-    }
+    void set_camera(Camera *camera) { camera_ = camera; }
     
     void rotate_camera(float dx, float dy) {
         camera_->rotate_around_center(-scale_ * dy, camera_->x());
