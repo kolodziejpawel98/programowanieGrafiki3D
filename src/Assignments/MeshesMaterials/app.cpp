@@ -15,10 +15,13 @@
 #include "glm/gtc/matrix_transform.hpp"
 
 #include "Engine/Mesh.cpp"
+#include "Engine/Material.cpp"
 
 
 void SimpleShapeApplication::init()
 {
+    xe::ColorMaterial::init();
+
     auto program = xe::utils::create_program(
         {{GL_VERTEX_SHADER, std::string(PROJECT_DIR) + "/shaders/base_vs.glsl"},
          {GL_FRAGMENT_SHADER, std::string(PROJECT_DIR) + "/shaders/base_fs.glsl"}});
@@ -65,8 +68,9 @@ void SimpleShapeApplication::init()
     std::vector<GLushort> indices = {
         0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17
     };
-        
-    mesh.add_submesh(0, 18);
+
+    xe::ColorMaterial colormaterial(glm::vec4{0.5f, 0.5f, 0.5f, 0.5f});
+    mesh.add_submesh(0, 18, &colormaterial);
     
     mesh.allocate_vertex_buffer(vertices.size() * sizeof(GLfloat), GL_STATIC_DRAW);
     mesh.load_vertices(0, vertices.size() * sizeof(GLfloat), vertices.data());

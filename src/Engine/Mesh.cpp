@@ -6,10 +6,12 @@
 
 #include "Mesh.h"
 
+
 void xe::Mesh::draw() const {
     glBindVertexArray(vao_);
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, i_buffer_);
     for (auto i = 0; i < submeshes_.size(); i++) {
+      if(materialas_.back() != nullptr) materialas_.back()->bind();
         glDrawElements(GL_TRIANGLES, submeshes_[i].count(), GL_UNSIGNED_SHORT,
                        reinterpret_cast<void *>(sizeof(GLushort) * submeshes_[i].start));
     }
