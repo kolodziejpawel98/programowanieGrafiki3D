@@ -14,6 +14,8 @@
 #include "glm/glm.hpp"
 #include "glm/gtc/constants.hpp"
 #include "camera_controler.h"
+#include <Engine/Mesh.h>
+
 
 class SimpleShapeApplication : public xe::Application
 {
@@ -72,4 +74,5 @@ private:
     GLuint pvm_buffer_handle;
     Camera *camera_;
     CameraControler *controler_;
+    xe::Mesh mesh;
 };

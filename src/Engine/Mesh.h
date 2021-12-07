@@ -38,7 +38,7 @@ namespace xe {
         }
 
         void draw() const;
-
+        
     private:
 
         GLuint vao_;
