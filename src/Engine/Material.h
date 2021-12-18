@@ -24,6 +24,8 @@ namespace xe {
 
         void bind();
 
+        void unbind();
+
         static void init();
 
         static GLuint program() { return shader_; }
@@ -38,5 +40,3 @@ namespace xe {
 
 
 }
-
-

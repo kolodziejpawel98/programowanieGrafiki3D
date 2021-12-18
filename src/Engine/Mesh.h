@@ -38,7 +38,9 @@ namespace xe {
           materialas_.push_back(mat);
         }
 
-        void add_submesh(GLuint start, GLuint end){add_submesh(start, end, nullptr);}
+        void add_submesh(GLuint start, GLuint end){
+          add_submesh(start, end, nullptr);
+        }
 
         void draw() const;
 

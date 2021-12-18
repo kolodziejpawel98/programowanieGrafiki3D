@@ -17,9 +17,11 @@ namespace xe {
         glBindBuffer(GL_UNIFORM_BUFFER, color_uniform_buffer_);
         glBufferSubData(GL_UNIFORM_BUFFER, 0, sizeof(glm::vec4), &color_[0]);
         glBindBuffer(GL_UNIFORM_BUFFER, 0u);
-
     }
 
+    void ColorMaterial::unbind(){
+      glBindBufferBase(GL_UNIFORM_BUFFER, 0, color_uniform_buffer_);//?????????????????
+    }
 
     void ColorMaterial::init() {
 
