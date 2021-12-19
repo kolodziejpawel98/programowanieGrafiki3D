@@ -20,7 +20,7 @@ namespace xe {
     }
 
     void ColorMaterial::unbind(){
-      glBindBufferBase(GL_UNIFORM_BUFFER, 0, color_uniform_buffer_);//?????????????????
+      glBindBufferBase(GL_UNIFORM_BUFFER, 0, color_uniform_buffer_);
     }
 
     void ColorMaterial::init() {

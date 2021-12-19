@@ -3,13 +3,13 @@
 in vec4 vertexColor;
 
 layout(std140, binding = 0) uniform Modifier {
-    float strength;
     vec3  color; 
+    float strength;
 };
 
 layout(location = 0) out vec4 vFragColor;
 
 void main() {
     vFragColor.a = vertexColor.a;
-    vFragColor.rgb = strength*color*vertexColor.rgb; 
+    vFragColor.rgb = color*strength;
 }

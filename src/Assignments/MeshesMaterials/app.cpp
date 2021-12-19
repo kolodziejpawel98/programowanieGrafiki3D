@@ -65,59 +65,21 @@ void SimpleShapeApplication::init()
         -0.5f, -0.5f, -0.5f,  1.0f, 1.0f, 0.2f,//17
     };
 
-    //  std::vector<GLfloat> vertices = {
-    //     //tylna sciana
-    //     0.0f, 1.0f, 0.0f,   //0
-    //     0.5f, -0.5f, -0.5f, //1
-    //     -0.5f, -0.5f, -0.5f,//2
-    //     //prawa sciana
-    //     0.0f, 1.0f, 0.0f,   //3
-    //     0.5f, -0.5f, 0.5f,  //4
-    //     0.5f, -0.5f, -0.5f, //5
-    //     //lewa sciana
-    //     0.0f, 1.0f, 0.0f,   //6
-    //     -0.5f, -0.5f, -0.5f, //7
-    //     -0.5f, -0.5f, 0.5f, //8
-    //     //przednia sciana
-    //     0.0f, 1.0f, 0.0f,   //9
-    //     -0.5f, -0.5f, 0.5f, //11
-    //     0.5f, -0.5f, 0.5f,  //10
-    //     //podstawa 
-    //     0.5f, -0.5f, -0.5f, //12
-    //     0.5f, -0.5f, 0.5f,  //13
-    //     -0.5f, -0.5f, 0.5f, //14
-    //     //podstawa
-    //     0.5f, -0.5f, -0.5f,  //15
-    //     -0.5f, -0.5f, 0.5f,   //16
-    //     -0.5f, -0.5f, -0.5f,  //17
-    // };
-    
     std::vector<GLushort> indices = {
         0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17
     };
 
-    mesh.add_submesh(3, 6, new xe::ColorMaterial(glm::vec4(1.0f, 1.0f, 1.0f, 1.0f)));
-    // mesh.add_submesh(6, 9, new xe::ColorMaterial(glm::vec4(1.0f, 0.0f, 0.0f, 1.0f)));
-    // mesh.add_submesh(9, 12, new xe::ColorMaterial(glm::vec4(1.0f, 0.0f, 0.0f, 1.0f)));
-    // mesh.add_submesh(12, 15, new xe::ColorMaterial(glm::vec4(1.0f, 0.0f, 0.0f, 1.0f)));
-    // mesh.add_submesh(15, 18, new xe::ColorMaterial(glm::vec4(1.0f, 0.0f, 0.0f, 1.0f)));
+    mesh.add_submesh(0, 3, new xe::ColorMaterial(glm::vec4(1.0f, 0.0f, 0.0f, 1.0f)));
+    mesh.add_submesh(3, 6, new xe::ColorMaterial(glm::vec4(0.0f, 1.0f, 0.0f, 1.0f)));
+    mesh.add_submesh(6, 9, new xe::ColorMaterial(glm::vec4(0.0f, 0.0f, 1.0f, 1.0f)));
+    mesh.add_submesh(9, 12, new xe::ColorMaterial(glm::vec4(1.0f, 1.0f, 1.0f, 1.0f)));
+    mesh.add_submesh(12, 18, new xe::ColorMaterial(glm::vec4(0.5f, 0.5f, 0.5f, 1.0f)));
     
     mesh.allocate_vertex_buffer(vertices.size() * sizeof(GLfloat), GL_STATIC_DRAW);
     mesh.load_vertices(0, vertices.size() * sizeof(GLfloat), vertices.data());
     mesh.allocate_index_buffer(indices.size()*sizeof(GLushort), GL_STATIC_DRAW);
     mesh.load_indices(0, indices.size()*sizeof(GLushort), indices.data());
 
-    // GLuint color_trans_buffer_handle;
-    // glGenBuffers(1, &color_trans_buffer_handle);
-    // glBindBuffer(GL_UNIFORM_BUFFER, color_trans_buffer_handle);
-    // glBufferData(GL_UNIFORM_BUFFER, 8 * sizeof(float), nullptr, GL_STATIC_DRAW);
-    // glBindBuffer(GL_UNIFORM_BUFFER, 0); 
-    // glBindBufferBase(GL_UNIFORM_BUFFER, 0, color_trans_buffer_handle); 
-    // float strength = 1.0;
-    // float color[3] = {1.0, 1.0, 1.0};
-    // glBufferSubData(GL_UNIFORM_BUFFER, 0, sizeof(float), &strength);
-    // glBufferSubData(GL_UNIFORM_BUFFER, 4 * sizeof(float), 3 * sizeof(float), color);
-    
     glGenBuffers(1, &pvm_buffer_handle);
     glBindBufferBase(GL_UNIFORM_BUFFER, 1, pvm_buffer_handle);
 
@@ -131,26 +93,18 @@ void SimpleShapeApplication::init()
     camera()->perspective(fov, aspect, near, far);
     camera()->look_at(glm::vec3{1.8f, -1.4f, 1.8f}, glm::vec3{0.0f, 0.0f, 0.0f}, glm::vec3{0.0, 1.0, 0.0});
 
-    // This setups a Vertex Array Object (VAO) that  encapsulates
-    // the state of all vertex buffers needed for rendering
     mesh.vertex_attrib_pointer(0, 3, GL_FLOAT, 6 * sizeof(GLfloat), 0);
-    mesh.vertex_attrib_pointer(1, 3, GL_FLOAT, 6 * sizeof(GLfloat), 3*sizeof(GLfloat));
-    //end of vao "recording"
 
     glClearColor(0.81f, 0.81f, 0.8f, 1.0f);
     glViewport(0, 0, w, h);
-    // glUseProgram(program);
 }
 
 void SimpleShapeApplication::frame(){
-    // glBindVertexArray(vao_);
     auto PVM = camera()->projection() * camera()->view();
     glBindBuffer(GL_UNIFORM_BUFFER, pvm_buffer_handle);
     glBufferData(GL_UNIFORM_BUFFER, sizeof(glm::mat4), nullptr, GL_STATIC_DRAW);
     glBufferSubData(GL_UNIFORM_BUFFER, 0, sizeof(glm::mat4), &PVM[0]);
     glBindBuffer(GL_UNIFORM_BUFFER, 0);
-    // glBindVertexArray(0);
-
     mesh.draw();
 }
 
