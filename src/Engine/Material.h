@@ -33,8 +33,10 @@ namespace xe {
     private:
         static GLuint shader_;
         static GLuint color_uniform_buffer_;
-
         glm::vec4 color_;
+        static GLint uniform_map_Kd_location_;
+        GLuint texture_;
+        GLuint texture_unit_;
 
     };
 

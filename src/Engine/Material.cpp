@@ -10,6 +10,7 @@ namespace xe {
 
     GLuint ColorMaterial::color_uniform_buffer_ = 0u;
     GLuint ColorMaterial::shader_ = 0u;
+    GLint  ColorMaterial::uniform_map_Kd_location_ = 0;
 
     void ColorMaterial::bind() {
         glBindBufferBase(GL_UNIFORM_BUFFER, 0, color_uniform_buffer_);
