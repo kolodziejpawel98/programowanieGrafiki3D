@@ -13,6 +13,14 @@ namespace xe {
     GLint  ColorMaterial::uniform_map_Kd_location_ = 0;
 
     void ColorMaterial::bind() {
+        bool use_map_Kd = 0;
+        if(texture_ > 0){
+            std::cout<<"IF"<<std::endl;
+            use_map_Kd = 1;
+            glUniform1i(uniform_map_Kd_location_, texture_unit_);
+            glActiveTexture(GL_TEXTURE0 + texture_unit_); 
+            glBindTexture(GL_TEXTURE_2D, texture_);
+        }
         glBindBufferBase(GL_UNIFORM_BUFFER, 0, color_uniform_buffer_);
         glUseProgram(program());
         glBindBuffer(GL_UNIFORM_BUFFER, color_uniform_buffer_);
@@ -22,6 +30,14 @@ namespace xe {
 
     void ColorMaterial::unbind(){
       glBindBufferBase(GL_UNIFORM_BUFFER, 0, color_uniform_buffer_);
+    }
+
+    GLuint ColorMaterial::getTexture(){
+        return texture_;
+    }
+
+    GLuint ColorMaterial::getTextureUnit(){
+        return texture_unit_;
     }
 
     void ColorMaterial::init() {
