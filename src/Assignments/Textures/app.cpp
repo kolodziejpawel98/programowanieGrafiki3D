@@ -40,12 +40,18 @@ void SimpleShapeApplication::init()
     
     stbi_set_flip_vertically_on_load(true);
     GLint width, height, channels;
-    std::cout<<"width = "<<width<<std::endl;
+    // std::cout<<"width = "<<width<<std::endl;
     auto texture_file = std::string(ROOT_DIR) + "/Models/multicolor.png";
-    auto img = stbi_load(texture_file, &width, &height, &channels, 0);
-    if (!img) {
-        spdlog::warn("Could not read image from file `{}'", texture_file);
-    }
+    const char * texture_file_to_char = texture_file.c_str();
+    auto img = stbi_load(texture_file_to_char, &width, &height, &channels, 0);
+    // if (!img) {
+    //     spdlog::warn("Could not read image from file `{}'", texture_file);
+    // }
+    GLuint tex;
+    glGenTextures(1, &tex);
+    glBindTexture(GL_TEXTURE_2D, tex);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, img);
+    // xe::ColorMaterial::setTexture(tex);////???<-----
 
 //    std::vector<GLfloat> vertices = {
 //         //tylna sciana
@@ -111,6 +117,7 @@ void SimpleShapeApplication::init()
 
     glGenBuffers(1, &pvm_buffer_handle);
     glBindBufferBase(GL_UNIFORM_BUFFER, 1, pvm_buffer_handle);
+    glBufferData(GL_UNIFORM_BUFFER, sizeof(glm::mat4), nullptr, GL_STATIC_DRAW);
 
     int w, h;
     std::tie(w, h) = frame_buffer_size();
@@ -132,7 +139,6 @@ void SimpleShapeApplication::init()
 void SimpleShapeApplication::frame(){
     auto PVM = camera()->projection() * camera()->view();
     glBindBuffer(GL_UNIFORM_BUFFER, pvm_buffer_handle);
-    glBufferData(GL_UNIFORM_BUFFER, sizeof(glm::mat4), nullptr, GL_STATIC_DRAW);
     glBufferSubData(GL_UNIFORM_BUFFER, 0, sizeof(glm::mat4), &PVM[0]);
     glBindBuffer(GL_UNIFORM_BUFFER, 0);
     mesh.draw();

@@ -16,10 +16,19 @@ namespace xe {
         bool use_map_Kd = 0;
         if(texture_ > 0){
             std::cout<<"IF"<<std::endl;
-            use_map_Kd = 1;
-            glUniform1i(uniform_map_Kd_location_, texture_unit_);
-            glActiveTexture(GL_TEXTURE0 + texture_unit_); 
+            
+            use_map_Kd = 1; //?????????
+            glUniform1i(uniform_map_Kd_location_, texture_unit_); //??adres w pierwszym argumencie
+            glActiveTexture(GL_TEXTURE0 + texture_unit_); //??glActiveTexture(GL_TEXTURE + texture_unit_); zamiast glActiveTexture(GL_TEXTURE0 + texture_unit_);
             glBindTexture(GL_TEXTURE_2D, texture_);
+            /////
+            
+            glBindBufferBase(GL_UNIFORM_BUFFER, 0, uniform_map_Kd_location_); ///0?????
+            // glUseProgram(program());
+            glBindBuffer(GL_UNIFORM_BUFFER, uniform_map_Kd_location_);
+            glBufferSubData(GL_UNIFORM_BUFFER, 0, sizeof(glm::vec4), &use_map_Kd); ///0????
+            glBindBuffer(GL_UNIFORM_BUFFER, 0u);
+        //////
         }
         glBindBufferBase(GL_UNIFORM_BUFFER, 0, color_uniform_buffer_);
         glUseProgram(program());
@@ -39,6 +48,13 @@ namespace xe {
     GLuint ColorMaterial::getTextureUnit(){
         return texture_unit_;
     }
+    void ColorMaterial::setTexture(GLuint texture_){
+        this->texture_ = texture_; //???
+    }
+
+    void ColorMaterial::setTextureUnit(GLuint texture_unit_){
+        this->texture_unit_ = texture_unit_; //?????
+    }
 
     void ColorMaterial::init() {
 
@@ -49,6 +65,11 @@ namespace xe {
         if (!program) {
             std::cerr << "Invalid program" << std::endl;
             exit(-1);
+        }
+
+        uniform_map_Kd_location_ = glGetUniformLocation(shader_, "map_Kd");
+        if (uniform_map_Kd_location_ == -1) {
+            spdlog::warn("Cannot get uniform {} location", "map_Kd");
         }
 
         shader_ = program;
