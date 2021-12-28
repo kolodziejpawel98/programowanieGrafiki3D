@@ -93,6 +93,8 @@ void SimpleShapeApplication::init()
     
     GLuint pvm_buffer_handle;
     glGenBuffers(1, &pvm_buffer_handle);
+    glBindBuffer(GL_UNIFORM_BUFFER, pvm_buffer_handle);
+    glBufferData(GL_UNIFORM_BUFFER, sizeof(glm::mat4), nullptr, GL_STATIC_DRAW);
     P_ = glm::perspective(fov_, aspect_, near_, far_); 
     V_ = glm::lookAt(glm::vec3{1.8f, -1.4f, 1.8f}, glm::vec3{0.0f, 0.0f, 0.0f}, glm::vec3{0.0, 1.0, 0.0});
     glBindBufferBase(GL_UNIFORM_BUFFER, 1, pvm_buffer_handle);
@@ -131,8 +133,6 @@ void SimpleShapeApplication::frame()
     // Binding the VAO will setup all the required vertex buffers.
     glBindVertexArray(vao_);
     auto PVM = P_ * V_;
-    glBindBuffer(GL_UNIFORM_BUFFER, pvm_buffer_handle);
-    glBufferData(GL_UNIFORM_BUFFER, sizeof(glm::mat4), nullptr, GL_STATIC_DRAW);
     glBufferSubData(GL_UNIFORM_BUFFER, 0, sizeof(glm::mat4), &PVM[0]);
     glBindBuffer(GL_UNIFORM_BUFFER, 0);
     glDrawElements(GL_TRIANGLES, 18, GL_UNSIGNED_SHORT, reinterpret_cast<GLvoid*>(0));

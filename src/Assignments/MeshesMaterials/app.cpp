@@ -82,6 +82,7 @@ void SimpleShapeApplication::init()
 
     glGenBuffers(1, &pvm_buffer_handle);
     glBindBufferBase(GL_UNIFORM_BUFFER, 1, pvm_buffer_handle);
+    glBufferData(GL_UNIFORM_BUFFER, sizeof(glm::mat4), nullptr, GL_STATIC_DRAW);
 
     int w, h;
     std::tie(w, h) = frame_buffer_size();
@@ -102,7 +103,6 @@ void SimpleShapeApplication::init()
 void SimpleShapeApplication::frame(){
     auto PVM = camera()->projection() * camera()->view();
     glBindBuffer(GL_UNIFORM_BUFFER, pvm_buffer_handle);
-    glBufferData(GL_UNIFORM_BUFFER, sizeof(glm::mat4), nullptr, GL_STATIC_DRAW);
     glBufferSubData(GL_UNIFORM_BUFFER, 0, sizeof(glm::mat4), &PVM[0]);
     glBindBuffer(GL_UNIFORM_BUFFER, 0);
     mesh.draw();
