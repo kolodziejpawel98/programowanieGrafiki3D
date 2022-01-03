@@ -1,6 +1,6 @@
 #version 450
 
-in vec2 vertexColor;
+in vec4 vertexColor;
 
 layout(std140, binding = 0) uniform Modifier {
     vec3  color; 

@@ -19,6 +19,7 @@
 #define STB_IMAGE_IMPLEMENTATION  1
 #include "3rdParty/stb/stb_image.h"
 
+
 void SimpleShapeApplication::init()
 {
     xe::ColorMaterial::init();
@@ -40,45 +41,23 @@ void SimpleShapeApplication::init()
     
     stbi_set_flip_vertically_on_load(true);
     GLint width, height, channels;
-    // std::cout<<"width = "<<width<<std::endl;
     auto texture_file = std::string(ROOT_DIR) + "/Models/multicolor.png";
     const char * texture_file_to_char = texture_file.c_str();
     auto img = stbi_load(texture_file_to_char, &width, &height, &channels, 0);
-    // if (!img) {
-    //     spdlog::warn("Could not read image from file `{}'", texture_file);
-    // }
+    if (!img) {
+        // spdlog::warn("Could not read image from file `{}'", texture_file);
+        std::cerr << "Could not read image" << std::endl;
+        exit(-1);
+    }
+
     GLuint tex;
     glGenTextures(1, &tex);
     glBindTexture(GL_TEXTURE_2D, tex);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, img);
-    // xe::ColorMaterial::setTexture(tex);////???<-----
+    xe::ColorMaterial *colorMaterial = new xe::ColorMaterial(glm::vec4(1.0f, 1.0f, 0.0f, 1.0f));
+    colorMaterial->setTexture(tex);
 
-//    std::vector<GLfloat> vertices = {
-//         //tylna sciana
-//         0.0f, 1.0f, 0.0f,   //0
-//         0.5f, -0.5f, -0.5f, //1
-//         -0.5f, -0.5f, -0.5f,//2
-//         //prawa sciana
-//         0.0f, 1.0f, 0.0f,   //3
-//         0.5f, -0.5f, 0.5f,  //4
-//         0.5f, -0.5f, -0.5f, //5
-//         //lewa sciana
-//         0.0f, 1.0f, 0.0f,   //6
-//         -0.5f, -0.5f, -0.5f,//7
-//         -0.5f, -0.5f, 0.5f, //8
-//         //przednia sciana
-//         0.0f, 1.0f, 0.0f,   //9
-//         -0.5f, -0.5f, 0.5f, //11
-//         0.5f, -0.5f, 0.5f,  //10
-//         //podstawa 
-//         0.5f, -0.5f, -0.5f, //12
-//         0.5f, -0.5f, 0.5f,  //13
-//         -0.5f, -0.5f, 0.5f, //14
-//         //podstawa
-//         0.5f, -0.5f, -0.5f, //15
-//         -0.5f, -0.5f, 0.5f, //16
-//         -0.5f, -0.5f, -0.5f,//17
-//     };
     std::vector<GLfloat> vertices = {
         0.0f, 0.0f, 0.0f, 0.1910f, 0.5000f, //podstawa 21:00    (0)
         0.0f, 0.0f, 1.0f, 0.5000f, 0.8090f, //podstawa 12:00    (1)
@@ -91,10 +70,6 @@ void SimpleShapeApplication::init()
 
     };
 
-    // std::vector<GLushort> indices = {
-    //     0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17
-    // };
-
     std::vector<GLushort> indices = {
             0,2,1,  //podstawa
             1,2,3,  //podstawa
@@ -104,12 +79,12 @@ void SimpleShapeApplication::init()
             7,2,0   //19:00
     };
 
-    mesh.add_submesh(0, 3, new xe::ColorMaterial(glm::vec4(1.0f, 0.0f, 0.0f, 1.0f)));
-    mesh.add_submesh(3, 6, new xe::ColorMaterial(glm::vec4(0.0f, 1.0f, 0.0f, 1.0f)));
-    mesh.add_submesh(6, 9, new xe::ColorMaterial(glm::vec4(0.0f, 0.0f, 1.0f, 1.0f)));
-    mesh.add_submesh(9, 12, new xe::ColorMaterial(glm::vec4(1.0f, 1.0f, 1.0f, 1.0f)));
-    mesh.add_submesh(12, 18, new xe::ColorMaterial(glm::vec4(0.5f, 0.5f, 0.5f, 1.0f)));
-    
+    mesh.add_submesh(0, 3, colorMaterial);
+    mesh.add_submesh(3, 6, colorMaterial);
+    mesh.add_submesh(6, 9, colorMaterial);
+    mesh.add_submesh(9, 12, colorMaterial);
+    mesh.add_submesh(12, 18, colorMaterial);
+
     mesh.allocate_vertex_buffer(vertices.size() * sizeof(GLfloat), GL_STATIC_DRAW);
     mesh.load_vertices(0, vertices.size() * sizeof(GLfloat), vertices.data());
     mesh.allocate_index_buffer(indices.size()*sizeof(GLushort), GL_STATIC_DRAW);
