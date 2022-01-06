@@ -1,4 +1,4 @@
-#version 460
+#version 450
 
 layout(location=0) out vec4 vFragColor;
 
@@ -16,7 +16,7 @@ in vec2 vertex_texcoords;
 uniform sampler2D map_Kd;
 
 void main() {
-    if(use_map_Kd == 0){
+    if(use_map_Kd == false){
         vFragColor = Kd;
     }else{
         vFragColor = Kd*texture(map_Kd, vertex_texcoords);

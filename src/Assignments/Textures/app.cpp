@@ -14,8 +14,6 @@
 #include "glm/gtx/string_cast.hpp"
 #include "glm/gtc/matrix_transform.hpp"
 
-#include "Engine/Mesh.cpp"
-#include "Engine/Material.cpp"
 #define STB_IMAGE_IMPLEMENTATION  1
 #include "3rdParty/stb/stb_image.h"
 
@@ -23,16 +21,6 @@
 void SimpleShapeApplication::init()
 {
     xe::ColorMaterial::init();
-
-    auto program = xe::utils::create_program(
-        {{GL_VERTEX_SHADER, std::string(PROJECT_DIR) + "/shaders/base_vs.glsl"},
-         {GL_FRAGMENT_SHADER, std::string(PROJECT_DIR) + "/shaders/base_fs.glsl"}});
-
-    if (!program)
-    {
-        std::cerr << "Invalid program" << std::endl;
-        exit(-1);
-    }
     
     glEnable(GL_DEPTH_TEST);
     glEnable(GL_CULL_FACE);
@@ -53,10 +41,11 @@ void SimpleShapeApplication::init()
     GLuint tex;
     glGenTextures(1, &tex);
     glBindTexture(GL_TEXTURE_2D, tex);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, img);
-    xe::ColorMaterial *colorMaterial = new xe::ColorMaterial(glm::vec4(1.0f, 1.0f, 0.0f, 1.0f));
-    colorMaterial->setTexture(tex);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    glBindTexture(GL_TEXTURE_2D, 0);
+    
 
     std::vector<GLfloat> vertices = {
         0.0f, 0.0f, 0.0f, 0.1910f, 0.5000f, //podstawa 21:00    (0)
@@ -67,7 +56,6 @@ void SimpleShapeApplication::init()
         0.5f, 1.0f, 0.5f, 1.0f, 1.0f,       //czubek 13:00      (5)
         0.5f, 1.0f, 0.5f, 1.0f, 0.0f,       //czubek 17:00      (6)
         0.5f, 1.0f, 0.5f, 0.0f, 0.0f        //czubek 19:00      (7)
-
     };
 
     std::vector<GLushort> indices = {
@@ -79,11 +67,10 @@ void SimpleShapeApplication::init()
             7,2,0   //19:00
     };
 
-    mesh.add_submesh(0, 3, colorMaterial);
-    mesh.add_submesh(3, 6, colorMaterial);
-    mesh.add_submesh(6, 9, colorMaterial);
-    mesh.add_submesh(9, 12, colorMaterial);
-    mesh.add_submesh(12, 18, colorMaterial);
+    xe::ColorMaterial *colorMaterial = new xe::ColorMaterial(glm::vec4(1.0f, 1.0f, 1.0f, 1.0f));
+    colorMaterial->setTexture(tex);
+
+    mesh.add_submesh(0, 18, colorMaterial);
 
     mesh.allocate_vertex_buffer(vertices.size() * sizeof(GLfloat), GL_STATIC_DRAW);
     mesh.load_vertices(0, vertices.size() * sizeof(GLfloat), vertices.data());
@@ -106,6 +93,7 @@ void SimpleShapeApplication::init()
 
     mesh.vertex_attrib_pointer(0, 3, GL_FLOAT, 5 * sizeof(GLfloat), 0);
     mesh.vertex_attrib_pointer(1, 2, GL_FLOAT, 5 * sizeof(GLfloat), 3*sizeof(GLfloat));
+    
 
     glClearColor(0.81f, 0.81f, 0.8f, 1.0f);
     glViewport(0, 0, w, h);

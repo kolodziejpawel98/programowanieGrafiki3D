@@ -42,11 +42,9 @@ namespace xe {
         static GLuint shader_;
         static GLuint color_uniform_buffer_;
         glm::vec4 color_;
-        static GLint uniform_map_Kd_location_; //adres zmiennej uniform w shaderze fragmentow
-        GLuint texture_; //uchwyt do tekstury
-        GLuint texture_unit_; //numer jednostki teksturujacej glActiveTexture(GL_TEXTURE0 + texture_unit_); 
-
+        static GLint uniform_map_Kd_location_;
+        GLuint texture_;
+        GLuint texture_unit_; 
     };
-
-
 }
+

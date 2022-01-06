@@ -10,7 +10,7 @@ namespace xe {
 
     GLuint ColorMaterial::color_uniform_buffer_ = 0u;
     GLuint ColorMaterial::shader_ = 0u;
-    GLint  ColorMaterial::uniform_map_Kd_location_ = 0;
+    GLint ColorMaterial::uniform_map_Kd_location_ = 0;
 
     void ColorMaterial::bind() {
         bool use_map_Kd = 0;
@@ -28,7 +28,6 @@ namespace xe {
     }
 
     void ColorMaterial::unbind(){
-        //glBindBuffer(GL_UNIFORM_BUFFER, 0u);
       glBindBufferBase(GL_UNIFORM_BUFFER, 0, color_uniform_buffer_);
     }
 
@@ -51,21 +50,20 @@ namespace xe {
 
 
         auto program = xe::utils::create_program(
-                {{GL_VERTEX_SHADER,   std::string(PROJECT_DIR) + "/shaders/base_vs.glsl"},
-                 {GL_FRAGMENT_SHADER, std::string(PROJECT_DIR) + "/shaders/base_fs.glsl"}});
+                {{GL_VERTEX_SHADER,   std::string(PROJECT_DIR) + "/shaders/color_vs.glsl"},
+                 {GL_FRAGMENT_SHADER, std::string(PROJECT_DIR) + "/shaders/color_fs.glsl"}});
         if (!program) {
             std::cerr << "Invalid program" << std::endl;
             exit(-1);
         }
-
-        shader_ = program;
         
+        shader_ = program;
+
         uniform_map_Kd_location_ = glGetUniformLocation(shader_, "map_Kd");
-        std::cout<<"uniform_map_Kd_location_ = "<<uniform_map_Kd_location_<<std::endl;
         if (uniform_map_Kd_location_ == -1) {
             // spdlog::warn("Cannot get uniform {} location", "map_Kd");
-            std::cerr << "cannot get uniform ????" << std::endl;
-            // exit(-1);
+            std::cerr << "cannot get uniform "<< std::endl;
+            exit(-1);
         }
 
         glGenBuffers(1, &color_uniform_buffer_);
@@ -73,6 +71,7 @@ namespace xe {
         glBindBuffer(GL_UNIFORM_BUFFER, color_uniform_buffer_);
         glBufferData(GL_UNIFORM_BUFFER, sizeof(glm::vec4) + sizeof(GLuint), nullptr, GL_STATIC_DRAW);
         glBindBuffer(GL_UNIFORM_BUFFER, 0u);
+
 #if __APPLE__
         auto u_modifiers_index = glGetUniformBlockIndex(program, "Color");
         if (u_modifiers_index == -1) {
