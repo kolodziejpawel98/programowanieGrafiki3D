@@ -97,6 +97,7 @@ void SimpleShapeApplication::init()
     glBufferData(GL_UNIFORM_BUFFER, sizeof(glm::mat4), nullptr, GL_STATIC_DRAW);
     P_ = glm::perspective(fov_, aspect_, near_, far_); 
     V_ = glm::lookAt(glm::vec3{1.8f, -1.4f, 1.8f}, glm::vec3{0.0f, 0.0f, 0.0f}, glm::vec3{0.0, 1.0, 0.0});
+    glBindBuffer(GL_UNIFORM_BUFFER, 0); 
     glBindBufferBase(GL_UNIFORM_BUFFER, 1, pvm_buffer_handle);
 
     // This setups a Vertex Array Object (VAO) that  encapsulates
