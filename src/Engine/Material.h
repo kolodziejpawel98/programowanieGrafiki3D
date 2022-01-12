@@ -18,6 +18,8 @@ namespace xe {
         virtual void unbind() {};
     };
 
+    GLuint create_texture(const std::string &name);
+
     class ColorMaterial : public Material {
     public:
         ColorMaterial(const glm::vec4 color) : color_(color), texture_(0), texture_unit_(0){}
@@ -30,13 +32,13 @@ namespace xe {
 
         static GLuint program() { return shader_; }
 
-        GLuint getTexture();
+        GLuint get_texture();
 
-        void setTexture(GLuint texture_);
+        void set_texture(GLuint texture_);
         
-        GLuint getTextureUnit();
+        GLuint get_texture_unit();
         
-        void setTextureUnit(GLuint texture_unit_);
+        void set_texture_unit(GLuint texture_unit_);
 
     private:
         static GLuint shader_;

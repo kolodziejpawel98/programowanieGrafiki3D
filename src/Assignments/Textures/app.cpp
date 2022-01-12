@@ -13,10 +13,10 @@
 #include "glm/gtc/constants.hpp"
 #include "glm/gtx/string_cast.hpp"
 #include "glm/gtc/matrix_transform.hpp"
+#include "Engine/mesh_loader.h"
 
 #define STB_IMAGE_IMPLEMENTATION  1
 #include "3rdParty/stb/stb_image.h"
-
 
 void SimpleShapeApplication::init()
 {
@@ -27,24 +27,24 @@ void SimpleShapeApplication::init()
     set_camera(new Camera);
     set_controler(new CameraControler(camera()));
     
-    stbi_set_flip_vertically_on_load(true);
-    GLint width, height, channels;
-    auto texture_file = std::string(ROOT_DIR) + "/Models/multicolor.png";
-    const char * texture_file_to_char = texture_file.c_str();
-    auto img = stbi_load(texture_file_to_char, &width, &height, &channels, 0);
-    if (!img) {
-        // spdlog::warn("Could not read image from file `{}'", texture_file);
-        std::cerr << "Could not read image" << std::endl;
-        exit(-1);
-    }
+    // stbi_set_flip_vertically_on_load(true);
+    // GLint width, height, channels;
+    auto texture_file = std::string(ROOT_DIR) + "/Models/world.topo.200412.3x5400x2700.jpg";
+    // const char * texture_file_to_char = texture_file.c_str();
+    // auto img = stbi_load(texture_file_to_char, &width, &height, &channels, 0);
+    // if (!img) {
+    //     // spdlog::warn("Could not read image from file `{}'", texture_file);
+    //     std::cerr << "Could not read image" << std::endl;
+    //     exit(-1);
+    // }
 
-    GLuint tex;
-    glGenTextures(1, &tex);
-    glBindTexture(GL_TEXTURE_2D, tex);
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, img);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-    glBindTexture(GL_TEXTURE_2D, 0);
+    // GLuint tex;
+    // glGenTextures(1, &tex);
+    // glBindTexture(GL_TEXTURE_2D, tex);
+    // glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, img);
+    // glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    // glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    // glBindTexture(GL_TEXTURE_2D, 0);
     
 
     std::vector<GLfloat> vertices = {
@@ -68,14 +68,17 @@ void SimpleShapeApplication::init()
     };
 
     xe::ColorMaterial *colorMaterial = new xe::ColorMaterial(glm::vec4(1.0f, 1.0f, 1.0f, 1.0f));
-    colorMaterial->setTexture(tex);
+    colorMaterial->set_texture(xe::create_texture(texture_file));
 
-    mesh.add_submesh(0, 18, colorMaterial);
+    auto pyramid = new xe::Mesh;
+    add_submesh(pyramid);
 
-    mesh.allocate_vertex_buffer(vertices.size() * sizeof(GLfloat), GL_STATIC_DRAW);
-    mesh.load_vertices(0, vertices.size() * sizeof(GLfloat), vertices.data());
-    mesh.allocate_index_buffer(indices.size()*sizeof(GLushort), GL_STATIC_DRAW);
-    mesh.load_indices(0, indices.size()*sizeof(GLushort), indices.data());
+    pyramid->add_submesh(0, 18, colorMaterial);
+
+    pyramid->allocate_vertex_buffer(vertices.size() * sizeof(GLfloat), GL_STATIC_DRAW);
+    pyramid->load_vertices(0, vertices.size() * sizeof(GLfloat), vertices.data());
+    pyramid->allocate_index_buffer(indices.size()*sizeof(GLushort), GL_STATIC_DRAW);
+    pyramid->load_indices(0, indices.size()*sizeof(GLushort), indices.data());
 
     glGenBuffers(1, &pvm_buffer_handle);
     glBindBufferBase(GL_UNIFORM_BUFFER, 1, pvm_buffer_handle);
@@ -91,9 +94,11 @@ void SimpleShapeApplication::init()
     camera()->perspective(fov, aspect, near, far);
     camera()->look_at(glm::vec3{1.8f, -1.4f, 1.8f}, glm::vec3{0.0f, 0.0f, 0.0f}, glm::vec3{0.0, 1.0, 0.0});
 
-    mesh.vertex_attrib_pointer(0, 3, GL_FLOAT, 5 * sizeof(GLfloat), 0);
-    mesh.vertex_attrib_pointer(1, 2, GL_FLOAT, 5 * sizeof(GLfloat), 3*sizeof(GLfloat));
+    pyramid->vertex_attrib_pointer(0, 3, GL_FLOAT, 5 * sizeof(GLfloat), 0);
+    pyramid->vertex_attrib_pointer(1, 2, GL_FLOAT, 5 * sizeof(GLfloat), 3*sizeof(GLfloat));
     
+    pyramid = xe::load_mesh_from_obj(std::string(ROOT_DIR) + "/Models/blue_marble.obj",
+                                          std::string(ROOT_DIR) + "/Models");
 
     glClearColor(0.81f, 0.81f, 0.8f, 1.0f);
     glViewport(0, 0, w, h);
@@ -104,7 +109,8 @@ void SimpleShapeApplication::frame(){
     glBindBuffer(GL_UNIFORM_BUFFER, pvm_buffer_handle);
     glBufferSubData(GL_UNIFORM_BUFFER, 0, sizeof(glm::mat4), &PVM[0]);
     glBindBuffer(GL_UNIFORM_BUFFER, 0);
-    mesh.draw();
+    for(auto m: meshes_)
+        m->draw();
 }
 
 void SimpleShapeApplication::framebuffer_resize_callback(int w, int h) {

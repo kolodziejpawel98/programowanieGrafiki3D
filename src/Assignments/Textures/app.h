@@ -61,6 +61,10 @@ public:
         }
     }
 
+    void add_submesh(xe::Mesh *mesh){
+        meshes_.push_back(mesh);
+    }
+
     ~SimpleShapeApplication() {
         if (camera_) {
             delete camera_;
@@ -74,5 +78,6 @@ private:
     GLuint pvm_buffer_handle;
     Camera *camera_;
     CameraControler *controler_;
-    xe::Mesh mesh;
+    // xe::Mesh mesh;
+    std::vector<xe::Mesh*> meshes_;
 };
