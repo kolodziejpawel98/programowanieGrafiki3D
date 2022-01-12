@@ -29,7 +29,7 @@ void SimpleShapeApplication::init()
     
     // stbi_set_flip_vertically_on_load(true);
     // GLint width, height, channels;
-    auto texture_file = std::string(ROOT_DIR) + "/Models/world.topo.200412.3x5400x2700.jpg";
+    auto texture_file = std::string(ROOT_DIR) + "/Models/multicolor.png";
     // const char * texture_file_to_char = texture_file.c_str();
     // auto img = stbi_load(texture_file_to_char, &width, &height, &channels, 0);
     // if (!img) {
