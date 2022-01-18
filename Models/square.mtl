@@ -1,0 +1,4 @@
+newmtl Texture
+Kd 0.25 0.25 0.25
+map_Kd multicolor.png
+illum 0
