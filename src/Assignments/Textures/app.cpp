@@ -26,18 +26,11 @@ void SimpleShapeApplication::init()
     glEnable(GL_CULL_FACE);
     set_camera(new Camera);
     set_controler(new CameraControler(camera()));
-    
-    auto texture_file = std::string(ROOT_DIR) + "/Models/multicolor.png";
-
-    xe::ColorMaterial *colorMaterial = new xe::ColorMaterial(glm::vec4(1.0f, 1.0f, 1.0f, 1.0f));
-    colorMaterial->set_texture(xe::create_texture(texture_file));
 
     auto pyramid = new xe::Mesh;
-    pyramid = xe::load_mesh_from_obj(std::string(ROOT_DIR) + "/Models/blue_marble.obj",
+    pyramid = xe::load_mesh_from_obj(std::string(ROOT_DIR) + "/Models/pyramid.obj",
                                           std::string(ROOT_DIR) + "/Models");
     add_submesh(pyramid);
-
-    pyramid->add_submesh(0, 18, colorMaterial);
 
     glGenBuffers(1, &pvm_buffer_handle);
     glBindBufferBase(GL_UNIFORM_BUFFER, 1, pvm_buffer_handle);
