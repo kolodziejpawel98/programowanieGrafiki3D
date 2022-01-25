@@ -34,3 +34,14 @@ Ma Pan źle ustwioną kompilację, Zamiast linkować bibliotekę engine, to Pan 
 3.01.2022 17:04:16
 Ma Pan źle ustwioną kompilację, Zamiast linkować bibliotekę engine, to Pan includuje pliki  Mesh.cpp i Material.cpp co powduje, że używane są złe szadery. Ładowane są shadery z katalogu Textures/shaders/ a powinny z Engine/shaders
 
+11.01.22 
+
+OK
+
+## Blue marble
+
+18.01.22 
+
+OK 
+
+
