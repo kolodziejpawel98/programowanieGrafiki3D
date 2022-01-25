@@ -13,6 +13,7 @@
 #include "glm/gtc/constants.hpp"
 #include "glm/gtx/string_cast.hpp"
 #include "glm/gtc/matrix_transform.hpp"
+#include "Engine/ColorMaterial.h"
 
 #define STB_IMAGE_IMPLEMENTATION  1
 #include "3rdParty/stb/stb_image.h"

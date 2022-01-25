@@ -15,13 +15,14 @@
 #include "glm/gtc/constants.hpp"
 #include "camera_controler.h"
 #include <Engine/Mesh.h>
+#include "Engine/Light.h"
 
 
 class SimpleShapeApplication : public xe::Application
 {
 public:
     
-    SimpleShapeApplication(int width, int height, std::string title, bool debug) : Application(width, height, title, debug) {}
+    SimpleShapeApplication(int width, int height, std::string title, bool debug) : Application(width, height, title, debug), num_of_lights(0) {}
 
     void init() override;
 
@@ -65,6 +66,15 @@ public:
         meshes_.push_back(mesh);
     }
 
+    void add_light(const xe::PointLight &p_light) {
+        p_lights_.push_back(p_light); 
+    }
+
+    void add_ambient(glm::vec3 ambient) {
+                ambient_ = ambient;
+    }
+    
+
     ~SimpleShapeApplication() {
         if (camera_) {
             delete camera_;
@@ -76,8 +86,12 @@ public:
 private:
     GLuint vao_;
     GLuint pvm_buffer_handle;
+    GLuint light_buffer;
+    unsigned int num_of_lights;
     Camera *camera_;
     CameraControler *controler_;
     // xe::Mesh mesh;
     std::vector<xe::Mesh*> meshes_;
+    glm::vec3 ambient_;
+    std::vector<xe::PointLight> p_lights_;
 };
