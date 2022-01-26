@@ -20,11 +20,12 @@ uniform sampler2D map_Kd;
 const int MAX_POINT_LIGHTS=24;
 
 struct PointLight {
+    vec3 position_in_w_space;
     vec3 position_in_view_space;
     vec3 color;
     float intensity;
     float radius;
-} ;  
+};  
 
 layout(std140, binding=2) uniform Lights {
     vec3 ambient;
@@ -34,6 +35,16 @@ layout(std140, binding=2) uniform Lights {
 
 void main() {
     vec3 normal = normalize(vertex_normals_in_vs);
+    
+    /*
+    if(use_map_Kd == false){
+        vFragColor = Kd;
+    }else{
+        vFragColor = Kd*texture(map_Kd, vertex_texcoords);
+    }   
+    vFragColor = abs(vertex_coords_in_vs);
+    */
+
     vFragColor.a = Kd.a;
-    vFragColor.rgb = Kd.rgb * p_light[0].color;
+    vFragColor.rgb = Kd.rgb * p_light[0].color * p_light[0].intensity;
 }

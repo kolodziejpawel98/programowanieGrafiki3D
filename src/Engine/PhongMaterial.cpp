@@ -16,6 +16,9 @@ namespace xe {
     void PhongMaterial::bind() {
         bool use_map_Kd = 0;
         if(texture_ > 0){
+            if(uniform_map_Kd_location_ != -1){
+                glUniform1i(uniform_map_Kd_location_, texture_unit_);
+            }
             use_map_Kd = 1;
             glUniform1i(uniform_map_Kd_location_, texture_unit_);
             glActiveTexture(GL_TEXTURE0 + texture_unit_);
@@ -64,7 +67,7 @@ namespace xe {
         if (uniform_map_Kd_location_ == -1) {
             // spdlog::warn("Cannot get uniform {} location", "map_Kd");
             std::cerr << "(PhongMaterial.cpp) cannot get uniform "<< std::endl;
-            exit(-1);
+            // exit(-1);
         }
 
         glGenBuffers(1, &color_uniform_buffer_);

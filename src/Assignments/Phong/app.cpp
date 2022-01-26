@@ -26,7 +26,7 @@ void SimpleShapeApplication::init()
     xe::PhongMaterial::init();
     
     glEnable(GL_DEPTH_TEST);
-    glEnable(GL_CULL_FACE);
+    // glEnable(GL_CULL_FACE);
     set_camera(new Camera);
     set_controler(new CameraControler(camera()));
 
@@ -37,11 +37,10 @@ void SimpleShapeApplication::init()
 
     add_submesh(pyramid);
 
-    
-    add_light(xe::PointLight(glm::vec3(0.0f, 0.0f, 1.0f), glm::vec3(1.0f), 10.0f, 5.0f));
-    add_ambient(glm::vec3(700.0f, 0.0f, 0.0f)); //???????????
+    // PointLight(position, color, intensity, radius)
+    add_light(xe::PointLight(glm::vec3(0.0f, 0.0f, 1.0f), glm::vec3(1.0f), 3.0f, 5.0f));
+    add_ambient(glm::vec3(0.0f, 1.0f, 0.0f));
     num_of_lights++;
-    //PointLight(position, color, intensity, radius)
 
     glGenBuffers(1, &pvm_buffer_handle);
     glBindBuffer(GL_UNIFORM_BUFFER, pvm_buffer_handle);
@@ -52,11 +51,9 @@ void SimpleShapeApplication::init()
     glGenBuffers(1, &light_buffer);
 	glBindBuffer(GL_UNIFORM_BUFFER, light_buffer);
 	glBufferData(GL_UNIFORM_BUFFER,
-                3 * sizeof(glm::vec4) + 4 * sizeof(float),
+                sizeof(glm::vec3) + sizeof(uint) + sizeof(xe::PointLight) * num_of_lights,
                 nullptr, GL_STATIC_DRAW
                 ); 
-                //vec3 ambient + uint n_p_lights
-                //3 * 16 + 4 * 4
     glBindBufferBase(GL_UNIFORM_BUFFER, 2, light_buffer);
     glBindBuffer(GL_UNIFORM_BUFFER, 0);
 
@@ -82,22 +79,21 @@ void SimpleShapeApplication::frame(){
     auto N = glm::mat3(glm::cross(R[1], R[2]), glm::cross(R[2], R[0]), glm::cross(R[0], R[1])); 
 
     glBindBuffer(GL_UNIFORM_BUFFER, light_buffer);
-    glBufferSubData(GL_UNIFORM_BUFFER, 0, sizeof(glm::vec3), &ambient_);
+    glBufferSubData(GL_UNIFORM_BUFFER, 0, sizeof(ambient_), &ambient_);
     glBufferSubData(GL_UNIFORM_BUFFER, sizeof(glm::vec3), sizeof(unsigned int), &num_of_lights);
     for(int i = 0; i < num_of_lights; i++){
-        p_lights_[i].position_in_vs = VM * glm::vec4(p_lights_[i].position_in_ws, 1.0f); //VM??
+        p_lights_[i].position_in_vs = VM * glm::vec4(p_lights_[i].position_in_ws, 1.0f);
     }
     glBufferSubData(GL_UNIFORM_BUFFER,
-                    sizeof(glm::vec3) + sizeof(unsigned int),
+                    sizeof(ambient_) + sizeof(unsigned int),
                     sizeof(xe::PointLight) * num_of_lights,
                     p_lights_.data()
                     );
     glBindBuffer(GL_UNIFORM_BUFFER, 0);
-
     glBindBuffer(GL_UNIFORM_BUFFER, pvm_buffer_handle);
 	glBufferSubData(GL_UNIFORM_BUFFER, 0, sizeof(glm::mat4), &PVM);
 	glBufferSubData(GL_UNIFORM_BUFFER, sizeof(glm::mat4), sizeof(glm::mat4), &VM);
-	glBufferSubData(GL_UNIFORM_BUFFER, 2 * sizeof(glm::mat4), sizeof(glm::vec3), &N[0]); //sizeof(glm::vec3) ?
+	glBufferSubData(GL_UNIFORM_BUFFER, 2 * sizeof(glm::mat4), sizeof(glm::vec3), &N[0]);
 	glBufferSubData(GL_UNIFORM_BUFFER, 3 * sizeof(glm::mat4), sizeof(glm::vec3), &N[1]);
 	glBufferSubData(GL_UNIFORM_BUFFER, 4 * sizeof(glm::mat4), sizeof(glm::vec3), &N[2]);
 	glBindBuffer(GL_UNIFORM_BUFFER, 0);
