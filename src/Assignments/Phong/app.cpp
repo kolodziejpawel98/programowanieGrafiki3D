@@ -38,13 +38,13 @@ void SimpleShapeApplication::init()
     add_submesh(pyramid);
 
     // PointLight(position, color, intensity, radius)
-    add_light(xe::PointLight(glm::vec3(0.0f, 0.0f, 1.0f), glm::vec3(1.0f), 3.0f, 5.0f));
+    add_light(xe::PointLight(glm::vec3(0.0f, 0.0f, 1.0f), glm::vec3(1.0f, 0.0f, 0.0f), 5.0f, 5.0f));
     add_ambient(glm::vec3(0.0f, 1.0f, 0.0f));
     num_of_lights++;
 
     glGenBuffers(1, &pvm_buffer_handle);
     glBindBuffer(GL_UNIFORM_BUFFER, pvm_buffer_handle);
-    glBufferData(GL_UNIFORM_BUFFER, 2 * sizeof(glm::mat4) + 3 * sizeof(glm::vec4), nullptr, GL_STATIC_DRAW); //3*sizeof(glm::vec4)
+    glBufferData(GL_UNIFORM_BUFFER, 2 * sizeof(glm::mat4) + sizeof(glm::mat4x3), nullptr, GL_STATIC_DRAW);
     glBindBufferBase(GL_UNIFORM_BUFFER, 1, pvm_buffer_handle);
     glBindBuffer(GL_UNIFORM_BUFFER, 0);
 

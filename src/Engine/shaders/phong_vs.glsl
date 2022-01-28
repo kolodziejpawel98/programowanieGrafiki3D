@@ -17,12 +17,12 @@ layout(std140, binding=1) uniform Transformations {
 
 out vec2 vertex_texcoords;
 out vec3 vertex_normals_in_vs;
-out vec4 vertex_coords_in_vs;
+out vec3 vertex_coords_in_vs;
 
 
 void main() {
     vertex_texcoords = a_vertex_texcoords;
     gl_Position =  PVM * VM * a_vertex_position;
-    vertex_coords_in_vs = VM * a_vertex_position;
+    vertex_coords_in_vs = (VM * a_vertex_position).xyz;
     vertex_normals_in_vs = normalize(a_vertex_normals * N);
 }
