@@ -134,6 +134,7 @@ void SimpleShapeApplication::frame()
     // Binding the VAO will setup all the required vertex buffers.
     glBindVertexArray(vao_);
     auto PVM = P_ * V_;
+    glBindBuffer(GL_UNIFORM_BUFFER, pvm_buffer_handle);
     glBufferSubData(GL_UNIFORM_BUFFER, 0, sizeof(glm::mat4), &PVM[0]);
     glBindBuffer(GL_UNIFORM_BUFFER, 0);
     glDrawElements(GL_TRIANGLES, 18, GL_UNSIGNED_SHORT, reinterpret_cast<GLvoid*>(0));
