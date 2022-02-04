@@ -38,7 +38,7 @@ void SimpleShapeApplication::init()
     add_submesh(pyramid);
 
     // PointLight(position, color, intensity, radius)
-    add_light(xe::PointLight(glm::vec3(0.0f, 0.0f, 1.0f), glm::vec3(1.0f, 0.0f, 0.0f), 5.0f, 5.0f));
+    add_light(xe::PointLight(glm::vec3(0.0f, 0.0f, 1.0f), glm::vec3(1.0f, 1.0f, 1.0f), 2.0f, 5.0f));
     add_ambient(glm::vec3(0.0f, 1.0f, 0.0f));
     num_of_lights++;
 
@@ -94,8 +94,8 @@ void SimpleShapeApplication::frame(){
 	glBufferSubData(GL_UNIFORM_BUFFER, 0, sizeof(glm::mat4), &PVM);
 	glBufferSubData(GL_UNIFORM_BUFFER, sizeof(glm::mat4), sizeof(glm::mat4), &VM);
 	glBufferSubData(GL_UNIFORM_BUFFER, 2 * sizeof(glm::mat4), sizeof(glm::vec3), &N[0]);
-	glBufferSubData(GL_UNIFORM_BUFFER, 3 * sizeof(glm::mat4), sizeof(glm::vec3), &N[1]);
-	glBufferSubData(GL_UNIFORM_BUFFER, 4 * sizeof(glm::mat4), sizeof(glm::vec3), &N[2]);
+	glBufferSubData(GL_UNIFORM_BUFFER, 2 * sizeof(glm::mat4) + sizeof(glm::vec4), sizeof(glm::vec3), &N[1]);
+	glBufferSubData(GL_UNIFORM_BUFFER, 2 * sizeof(glm::mat4) + 2 * sizeof(glm::vec4), sizeof(glm::vec3), &N[2]);
 	glBindBuffer(GL_UNIFORM_BUFFER, 0);
 
     for(auto m: meshes_)
