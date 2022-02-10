@@ -45,3 +45,8 @@ OK
 OK 
 
 
+## Phong 
+
+10.02.2022 10:16:30 
+
+Diffuse OK
