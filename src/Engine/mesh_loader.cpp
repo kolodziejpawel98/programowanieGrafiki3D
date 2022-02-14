@@ -161,8 +161,18 @@ namespace xe {
             for (int i = 0; i < 3; i++)
                 color[i] = mat.diffuse[i];
             color[3] = 1.0;
+            // std::cout<<mat.specular[0]<<std::endl;
             SPDLOG_DEBUG("Adding PhongMaterial {}", glm::to_string(color));
             auto material = new xe::PhongMaterial(color);
+
+            for (int i = 0; i < 3; i++){
+                material->Ka[i] = mat.ambient[i];
+                material->Ks[i] = mat.specular[i];
+            }
+            material->Ka[3] = 1.0f;
+            material->Ks[3] = 1.0f;
+            material->Ns = mat.shininess;
+            
             if (!mat.diffuse_texname.empty()) {
                 auto texture = xe::create_texture(mtl_dir + "/" + mat.diffuse_texname);
                 SPDLOG_DEBUG("Adding Texture {} {:1d}", mat.diffuse_texname, texture);

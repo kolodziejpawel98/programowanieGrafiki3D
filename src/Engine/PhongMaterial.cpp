@@ -15,20 +15,23 @@ namespace xe {
 
     void PhongMaterial::bind() {
         bool use_map_Kd = 0;
-        if(texture_ > 0){
+        if(map_Kd > 0){
             if(uniform_map_Kd_location_ != -1){
                 glUniform1i(uniform_map_Kd_location_, texture_unit_);
             }
             use_map_Kd = 1;
             glUniform1i(uniform_map_Kd_location_, texture_unit_);
             glActiveTexture(GL_TEXTURE0 + texture_unit_);
-            glBindTexture(GL_TEXTURE_2D, texture_);
+            glBindTexture(GL_TEXTURE_2D, map_Kd);
         }
             glBindBufferBase(GL_UNIFORM_BUFFER, 0, color_uniform_buffer_);
             glUseProgram(program());
             glBindBuffer(GL_UNIFORM_BUFFER, color_uniform_buffer_);
-            glBufferSubData(GL_UNIFORM_BUFFER, 0, sizeof(glm::vec4), &color_[0]);
-            glBufferSubData(GL_UNIFORM_BUFFER, sizeof(glm::vec4), sizeof(GLuint), &use_map_Kd);
+            glBufferSubData(GL_UNIFORM_BUFFER, 0, sizeof(glm::vec4), &Kd[0]);
+            glBufferSubData(GL_UNIFORM_BUFFER, sizeof(glm::vec4), sizeof(glm::vec4), &Ka[0]);
+            glBufferSubData(GL_UNIFORM_BUFFER, 2 * sizeof(glm::vec4), sizeof(glm::vec4), &Ks[0]);
+            glBufferSubData(GL_UNIFORM_BUFFER, 3 * sizeof(glm::vec4), sizeof(float), &Ns);
+            glBufferSubData(GL_UNIFORM_BUFFER, 3 * sizeof(glm::vec4) + sizeof(float), sizeof(bool), &use_map_Kd);
     }
 
     void PhongMaterial::unbind(){
@@ -36,22 +39,14 @@ namespace xe {
     }
 
     GLuint PhongMaterial::get_texture(){
-        return texture_;
+        return map_Kd;
     }
 
-    GLuint PhongMaterial::get_texture_unit(){
-        return texture_unit_;
-    }
-    void PhongMaterial::set_texture(GLuint texture_){
-        this->texture_ = texture_;
-    }
-
-    void PhongMaterial::set_texture_unit(GLuint texture_unit_){
-        this->texture_unit_ = texture_unit_;
+    void PhongMaterial::set_texture(GLuint map_Kd){
+        this->map_Kd = map_Kd;
     }
 
     void PhongMaterial::init() {
-
 
         auto program = xe::utils::create_program(
                 {{GL_VERTEX_SHADER,   std::string(PROJECT_DIR) + "/shaders/phong_vs.glsl"},
@@ -73,7 +68,7 @@ namespace xe {
         glGenBuffers(1, &color_uniform_buffer_);
 
         glBindBuffer(GL_UNIFORM_BUFFER, color_uniform_buffer_);
-        glBufferData(GL_UNIFORM_BUFFER, sizeof(glm::vec4) + sizeof(GLuint), nullptr, GL_STATIC_DRAW);
+        glBufferData(GL_UNIFORM_BUFFER, 3 * sizeof(glm::vec4) + sizeof(bool) + sizeof(float), nullptr, GL_STATIC_DRAW);
         glBindBuffer(GL_UNIFORM_BUFFER, 0u);
 
 #if __APPLE__

@@ -38,7 +38,7 @@ void SimpleShapeApplication::init()
     add_submesh(pyramid);
 
     // PointLight(position, color, intensity, radius)
-    add_light(xe::PointLight(glm::vec3(0.0f, 0.0f, 1.0f), glm::vec3(1.0f, 1.0f, 1.0f), 2.0f, 5.0f));
+    add_light(xe::PointLight(glm::vec3(0.0f, 0.0f, 1.0f), glm::vec3(1.0f, 1.0f, 1.0f), 2.0f, 5.0f));    
     add_ambient(glm::vec3(0.0f, 1.0f, 0.0f));
     num_of_lights++;
 
