@@ -50,3 +50,7 @@ OK
 10.02.2022 10:16:30 
 
 Diffuse OK
+
+2.03.2022 16:32:44
+
+Diffuse jest dwa razy mnozeone przez Kd, raz wewnątrz pętli (vFRagColor), a raz w ostatniej linijce.  Poza tym OK :)
